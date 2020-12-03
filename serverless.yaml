@@ -1,0 +1,27 @@
+# serverless.yml
+useDotenv: true
+service: apollo-lambda
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-2
+  deploymentBucket:
+    name: vax-assure-deployment-bucket
+    serverSideEncryption: AES256
+  apiGateway:
+    shouldStartNameWithService: true
+
+functions:
+  graphql:
+    handler: build/graphql/lambda.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+      - http:
+          path: graphql
+          method: get
+          cors: true
+plugins:
+  - serverless-deployment-bucket
