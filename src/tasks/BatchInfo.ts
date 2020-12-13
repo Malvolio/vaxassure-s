@@ -1,4 +1,4 @@
-import { Brand, make } from "ts-brand";
+import { Nominal } from "simplytyped";
 import Knex from "knex";
 import { InferType } from "yup";
 import * as yup from "yup";
@@ -51,8 +51,10 @@ export const verifyBatchInfo = (s: string): BatchInfoIn | null => {
   return bs && validateObject(batchInfoInSchema, JSON.parse(bs.info));
 };
 
+export type BatchInfoUid = Nominal<string, "BatchInfoRow.uid">;
+
 export interface BatchInfoRow {
-  uid: Brand<string, BatchInfoRow>;
+  uid: BatchInfoUid;
   vaccine: string;
   batch_id: string;
   doses: number;
@@ -60,18 +62,15 @@ export interface BatchInfoRow {
   created_at: string;
 }
 
-export type BatchInfoUid = BatchInfoRow["uid"];
+export type BatchTokenUid = Nominal<string, "BatchTokenRow.uid">;
 
 type BatchTokenRow = {
-  uid: Brand<string, BatchTokenRow>;
+  uid: BatchTokenUid;
   batch_info_uid: BatchInfoUid;
   ip: string;
   phone?: string;
   created_at: string;
 };
-
-export type BatchTokenUid = BatchTokenRow["uid"];
-export const BatchTokenUid = make<BatchTokenUid>();
 
 export const upsertBatchInfo = async (
   knex: Knex,

@@ -10,7 +10,10 @@ provider:
     serverSideEncryption: AES256
   apiGateway:
     shouldStartNameWithService: true
-
+package:
+  excludeDevDependencies: true
+  include:
+    - build/**
 functions:
   graphql:
     handler: build/graphql/lambda.graphqlHandler

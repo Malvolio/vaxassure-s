@@ -25,7 +25,12 @@ class ApolloServerH extends ApolloServer {
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
-exports.graphqlHandler = server.createHandler();
+exports.graphqlHandler = server.createHandler({
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+});
 
 /*
 var server = require('apollo-server-lambda'),

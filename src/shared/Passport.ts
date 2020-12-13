@@ -1,6 +1,6 @@
-import { Brand, make } from "ts-brand";
+import { Nominal } from "simplytyped";
 
-type PassportId = Brand<string, "PassportId">;
+export type PassportId = Nominal<string, "PassportId">;
 
 export function isPassportId(s: string): s is PassportId {
   return !!/[0-9a-z]{10,}/i.exec(s);

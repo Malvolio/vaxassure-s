@@ -70,7 +70,7 @@ async function activatePassport(
     return badReturn("bad-passport-id");
   }
   const knex = getKnex();
-  const tokenUid = BatchTokenUid(token);
+  const tokenUid = token as BatchTokenUid;
   return knex.transaction(async (txn) => {
     const batchInfoRow = await decrementBatchCount(knex, tokenUid);
     if (!batchInfoRow) {
@@ -90,8 +90,8 @@ async function activatePassport(
 
     const { uid: activationId } = activationRow;
 
-    const headshotURL = await generateInfoUrl(passportId, activationId);
-    const infoURL = await generateHeadshotUrl(passportId, activationId);
+    const infoURL = await generateInfoUrl(passportId, activationId);
+    const headshotURL = await generateHeadshotUrl(passportId, activationId);
 
     if (!headshotURL || !infoURL) {
       return badReturn("unknown-failure");
@@ -115,7 +115,7 @@ async function completeActivation(
     return badReturn("bad-activation-id");
   }
   const knex = getKnex();
-  const activationUid = ActivationUid(activationId);
+  const activationUid = activationId as ActivationUid;
   const success = knex.transaction((txn) =>
     updateDirectory(txn, activationUid)
   );

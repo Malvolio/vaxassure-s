@@ -1,11 +1,9 @@
-import { Brand, make } from "ts-brand";
+import { Nominal } from "simplytyped";
 import AWS from "aws-sdk";
 import Knex from "knex";
 import { BatchInfoUid, BatchTokenUid, fetchBatchInfo } from "./BatchInfo";
 import { safeParse } from "./utils";
-import { PassportDirectory } from "../shared/Passport";
-
-type PassportId = Brand<string, "PassportId">;
+import { PassportDirectory, PassportId } from "../shared/Passport";
 
 export function isPassportId(s: string): s is PassportId {
   return !!/[0-9a-z]{10,}/i.exec(s);
@@ -31,15 +29,13 @@ const generateUrl = (suffix: string) => (
         Expires,
         ContentType: "binary/octet-stream",
         ACL: "public-read",
-        CacheControl: "public; max-age=8640000", // 100 days
+        CacheControl: "public, max-age=8640000", // 100 days
       },
       (e: unknown, u: string) => {
         if (e) {
           console.error(e);
-          resolve(undefined);
-        } else {
-          resolve(u);
         }
+        resolve(e ? null : u);
       }
     );
   });
@@ -48,16 +44,15 @@ const generateUrl = (suffix: string) => (
 export const generateInfoUrl = generateUrl("json.x");
 export const generateHeadshotUrl = generateUrl("jpg.x");
 
+export type ActivationUid = Nominal<string, "ActivationRow.uid">;
+
 type ActivationRow = {
-  uid: Brand<string, ActivationRow>;
+  uid: ActivationUid;
   batch_info_uid: BatchInfoUid;
   batch_token_uid: BatchTokenUid;
   passport_id: PassportId;
   ip: string;
 };
-
-export type ActivationUid = ActivationRow["uid"];
-export const ActivationUid = make<ActivationUid>();
 
 export const insertActivation = async (
   knex: Knex,
@@ -109,7 +104,7 @@ export const updateDirectory = async (knex: Knex, uid: ActivationUid) => {
       }
     })
   );
-  console.log({ contents });
+
   const now = Date.now();
   const directory = ((contents && safeParse(contents)) ||
     {}) as PassportDirectory;
@@ -127,18 +122,14 @@ export const updateDirectory = async (knex: Knex, uid: ActivationUid) => {
         Key,
         ContentType: "application/json",
         ACL: "public-read",
-        CacheControl: "public; max-age=60",
+        CacheControl: "public, max-age=10",
         Body: JSON.stringify(updatedDirectory),
       },
-      (e, d) => {
-        console.log({ d });
-
+      (e) => {
         if (e) {
           console.error(e);
-          resolve(false);
-        } else {
-          resolve(true);
         }
+        resolve(!e);
       }
     )
   );

@@ -14,7 +14,7 @@ s3.getSignedUrl(
     Expires: signedUrlExpireSeconds,
     ContentType: "text/html",
     ACL: "public-read",
-    CacheControl: "public; max-age=8640000", // 100 days
+    CacheControl: "public, max-age=8640000", // 100 days
   },
   (e, u) => {
     const q = url.parse(u, true);
