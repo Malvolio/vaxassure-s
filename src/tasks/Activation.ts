@@ -9,8 +9,8 @@ export function isPassportId(s: string): s is PassportId {
   return !!/[0-9a-z]{10,}/i.exec(s);
 }
 
-const s3 = new AWS.S3();
-const Bucket = "vaxassure-test-data";
+const s3 = new AWS.S3({ region: "us-west-2" });
+const Bucket = "d.vaxassure.me";
 
 const pathFrom = (s: string) => s.match(/..?/g)!.join("/");
 
