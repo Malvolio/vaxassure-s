@@ -2,6 +2,10 @@ import { Base64 } from "js-base64";
 import { BatchCertificate, BatchInfoIn } from "../tasks/BatchInfo";
 const [, , batchId] = process.argv;
 
+if (!batchId) {
+  console.log("usage: makeBatchCert batch-id");
+  process.exit();
+}
 const batchInfo: BatchInfoIn = {
   vaccine: "pft01",
   batchId,
