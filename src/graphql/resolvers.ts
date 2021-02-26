@@ -103,6 +103,7 @@ async function activatePassport(
       headshotURL,
       infoURL,
       activationId,
+      version: "v0.2",
     };
   });
 }
@@ -116,7 +117,7 @@ async function completeActivation(
   }
   const knex = getKnex();
   const activationUid = activationId as ActivationUid;
-  const success = knex.transaction((txn) =>
+  const success = await knex.transaction((txn) =>
     updateDirectory(txn, activationUid)
   );
   if (!success) {
