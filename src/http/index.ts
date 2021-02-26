@@ -7,7 +7,11 @@ const app = express();
 // default options
 app.use(fileUpload());
 const corsOptions = {
-  origin: "http://localhost:8000",
+  origin: [
+    new RegExp("http://localhost:.*"),
+    new RegExp("https://.*\\.loca\\.lt"),
+    "https://c.vaxassure.com",
+  ],
 };
 app.post("/upload", cors(corsOptions), (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
