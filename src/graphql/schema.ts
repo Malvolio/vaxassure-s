@@ -32,6 +32,7 @@ const typeDefs = gql`
     headshotURL: String
     infoURL: String
     activationId: ID
+    version: String
   }
   type BatchInfo {
     uid: ID!
